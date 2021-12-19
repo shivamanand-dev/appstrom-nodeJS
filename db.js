@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const mongoURL =
-  "mongodb://localhost:27017/appstrom?readPreference=primary&appname=MongoDB%20Compass&ssl=false";
+  "mongodb://localhost:27017/appstrom?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 
 const connectMongo = () => {
   mongoose.connect(mongoURL, () => {
