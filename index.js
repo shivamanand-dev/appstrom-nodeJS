@@ -4,6 +4,10 @@ connectMongo();
 const express = require("express");
 const app = express();
 
+// CORS
+var cors = require("cors");
+app.use(cors());
+
 // Enviornment Variables
 const dotenv = require("dotenv");
 dotenv.config();
