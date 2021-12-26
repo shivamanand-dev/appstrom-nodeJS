@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
-const mongoURL =
-  "mongodb+srv://shivam:shivam@appstorm.e4ife.mongodb.net/appStorm?retryWrites=true&w=majority";
+const mongoURL = "mongodb+srv://shivam:shivam@appstorm.e4ife.mongodb.net/";
 // console.log(process.env.mongoURL);
 
 const connectMongo = () => {

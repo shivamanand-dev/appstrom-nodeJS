@@ -42,7 +42,7 @@ router.post(
         email: req.body.email,
         username: req.body.username,
         password: req.body.password,
-        promocode: req.body.promocode,
+        promocode: req.body.username,
         appliedPromocode: req.body.appliedPromocode,
         openningBalance: req.body.openningBalance,
       };
@@ -52,7 +52,7 @@ router.post(
       let availUsername = await User.findOne({ username: username });
 
       //   If same usernaem or email is Present give 404
-      if (user || availUsername) {
+      if (user && availUsername) {
         return res
           .status(400)
           .json({ success: success, error: "sorry, user already registered" });
