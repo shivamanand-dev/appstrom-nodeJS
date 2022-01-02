@@ -180,7 +180,7 @@ router.get("/getuser", getUser, async (req, res) => {
     const userId = req.user.id;
     const user = await User.findById(userId).select("-password");
     // console.log(user, " user");
-    res.send(user);
+    res.json(user);
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Server error occur" });
