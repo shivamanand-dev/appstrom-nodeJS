@@ -184,7 +184,10 @@ router.get("/getuser", getUser, async (req, res) => {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId).select("-password");
-    // console.log(user, " user");
+    // console.log(user.avatar, " user");
+
+    // const img = await sharp(user.avatar).toFormat("jpeg").toFile("../img");
+
     res.json(user);
   } catch (error) {
     console.error(error);
