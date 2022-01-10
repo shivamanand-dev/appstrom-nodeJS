@@ -31,6 +31,9 @@ const UserSchema = new Schema({
     type: Number,
     required: true,
   },
+  avatar: {
+    type: Buffer,
+  },
 });
 
 module.exports = mongoose.model("user", UserSchema);

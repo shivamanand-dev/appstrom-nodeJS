@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 
-const mongoURL =
-  "mongodb://localhost:27017/appStrom?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
+const mongoURL = process.env.DB_CONNECT_STRING;
 // const mongoURL = "mongodb+srv://shivam:shivam@appstorm.e4ife.mongodb.net/";
 // console.log(process.env.mongoURL);
 

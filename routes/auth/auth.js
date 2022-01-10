@@ -5,9 +5,12 @@ const { body, validationResult } = require("express-validator");
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 const getUser = require("../../middleware/getUser");
+const multer = require("multer");
+const sharp = require("sharp");
 
 const JWT_Secret = process.env.JWT_Secret;
 
+// SIGN UP
 router.post(
   "/signup",
   //   Validators
@@ -117,6 +120,7 @@ router.post(
   }
 );
 
+// LOG IN
 router.post(
   "/login",
   [
@@ -175,12 +179,48 @@ router.post(
   }
 );
 
+// GET USER
 router.get("/getuser", getUser, async (req, res) => {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId).select("-password");
     // console.log(user, " user");
     res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Server error occur" });
+  }
+});
+
+// Profile Pic Upload
+const upload = multer({
+  limits: {
+    fileSize: 3000000,
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
+      return cb(new Error("Please upload images in png, jpg or jpeg"));
+    }
+
+    // cb(new Error("File must be pdf"));
+    cb(undefined, true);
+    // cb(undefined, false);
+  },
+});
+
+router.post("/avatar", getUser, upload.single("avatar"), async (req, res) => {
+  try {
+    const buffer = await sharp(req.file.buffer)
+      .resize({ width: 250, height: 250 })
+      .png()
+      .toBuffer();
+
+    const userId = req.user.id;
+    const user = await User.findById(userId).select("-password");
+
+    user.avatar = buffer;
+    await user.save();
+    res.status(200).send();
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Server error occur" });
