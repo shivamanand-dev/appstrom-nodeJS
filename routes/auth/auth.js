@@ -211,10 +211,10 @@ router.get("/getuser", getUser, async (req, res) => {
 //   },
 // });
 
-router.post("/avatar", getUser, async (req, res) => {
+router.put("/avatar", getUser, async (req, res) => {
   try {
     const avatar = {
-      avatar: req.body.avatar,
+      avatar: req.files.avatar,
     };
 
     // const userId = req.user.id;
