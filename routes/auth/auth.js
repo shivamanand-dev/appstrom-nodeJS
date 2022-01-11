@@ -196,34 +196,35 @@ router.get("/getuser", getUser, async (req, res) => {
 });
 
 // Profile Pic Upload
-const upload = multer({
-  limits: {
-    fileSize: 3000000,
-  },
-  fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
-      return cb(new Error("Please upload images in png, jpg or jpeg"));
-    }
+// const upload = multer({
+//   limits: {
+//     fileSize: 3000000,
+//   },
+//   fileFilter(req, file, cb) {
+//     if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
+//       return cb(new Error("Please upload images in png, jpg or jpeg"));
+//     }
 
-    // cb(new Error("File must be pdf"));
-    cb(undefined, true);
-    // cb(undefined, false);
-  },
-});
+//     // cb(new Error("File must be pdf"));
+//     cb(undefined, true);
+//     // cb(undefined, false);
+//   },
+// });
 
-router.post("/avatar", getUser, upload.single("avatar"), async (req, res) => {
+router.post("/avatar", getUser, async (req, res) => {
   try {
-    const buffer = await sharp(req.file.buffer)
-      .resize({ width: 250, height: 250 })
-      .png()
-      .toBuffer();
+    const avatar = {
+      avatar: req.body.avatar,
+    };
 
-    const userId = req.user.id;
-    const user = await User.findById(userId).select("-password");
+    // const userId = req.user.id;
+    // const user = await User.findById(userId).select("-password");
 
-    user.avatar = buffer;
-    await user.save();
-    res.status(200).send();
+    let savedImage = await User.findByIdAndUpdate(req.params.id, {
+      $set: avatar,
+      new: true,
+    });
+    res.status(200).send(savedImage);
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Server error occur" });

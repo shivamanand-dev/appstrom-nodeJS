@@ -32,7 +32,8 @@ const UserSchema = new Schema({
     required: true,
   },
   avatar: {
-    type: Buffer,
+    type: String,
+    default: "",
   },
 });
 
