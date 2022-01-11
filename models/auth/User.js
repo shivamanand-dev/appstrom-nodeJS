@@ -31,10 +31,6 @@ const UserSchema = new Schema({
     type: Number,
     required: true,
   },
-  avatar: {
-    type: String,
-    default: "",
-  },
 });
 
 module.exports = mongoose.model("user", UserSchema);
