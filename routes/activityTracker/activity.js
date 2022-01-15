@@ -50,7 +50,7 @@ router.put(
   [body("name", "Name must be min 3 char").isLength({ min: 3 })],
   async (req, res) => {
     try {
-      const { name, description, days } = req.body;
+      const { name, description, days, isActivityCompeted } = req.body;
       const updatedActivity = {};
 
       if (name) {
@@ -61,6 +61,9 @@ router.put(
       }
       if (days) {
         updatedActivity.days = days;
+      }
+      if (isActivityCompeted) {
+        updatedActivity.isActivityCompeted = isActivityCompeted;
       }
 
       let activity = await Activity.findById(req.params.id);

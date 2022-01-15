@@ -20,6 +20,10 @@ const ActivitySchema = new Schema({
   days: {
     type: Array,
   },
+  isActivityCompeted: {
+    type: Boolean,
+    default: false,
+  },
   date: {
     type: Date,
     default: Date.now(),

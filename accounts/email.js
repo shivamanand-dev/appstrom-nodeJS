@@ -13,16 +13,6 @@ const sendWelcomeEmail = (email, name) => {
   });
 };
 
-const sendByeEmail = (email, name) => {
-  sgMail.send({
-    to: email,
-    from: "admin@appstrom.app",
-    subject: "GoodBye",
-    text: `Good Bye, ${name} I think you bored from our service`,
-  });
-};
-
 module.exports = {
   sendWelcomeEmail,
-  sendByeEmail,
 };
