@@ -17,6 +17,7 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use("/api/auth", require("./routes/auth/auth"));
 app.use("/api/activity", require("./routes/activityTracker/activity"));
+app.use("/api/elaichi", require("./routes/socialAppElaichi/Elaichi"));
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

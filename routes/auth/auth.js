@@ -123,10 +123,7 @@ router.post(
 // LOG IN
 router.post(
   "/login",
-  [
-    body("username", "Username must be min 5 char").isLength({ min: 5 }),
-    body("password", "Password must be min 7 char").isLength({ min: 7 }),
-  ],
+  [body("password", "Password must be min 7 char").isLength({ min: 7 })],
   async (req, res) => {
     try {
       let success = false;
@@ -140,10 +137,17 @@ router.post(
       }
 
       //   Destructure request body
-      //   const { username, password } = req.body;
+      const { username } = req.body;
 
       //   Find User for the requested username
-      let user = await User.findOne({ username: req.body.username });
+      let user;
+
+      if (username.search("@") === -1) {
+        user = await User.findOne({ username: req.body.username });
+      } else {
+        user = await User.findOne({ email: req.body.username });
+      }
+
       if (!user) {
         return res.status(400).json({
           success: success,
