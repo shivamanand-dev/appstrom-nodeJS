@@ -15,7 +15,7 @@ router.post(
   //   Validators
   [
     body("email", "Enter correct email").isEmail(),
-    body("username", "Username must be min 5 char").isLength({ min: 5 }),
+    body("username", "Username must be min 3 char").isLength({ min: 3 }),
     body("password", "Password must be min 7 char").isLength({ min: 7 }),
   ],
   async (req, res) => {
