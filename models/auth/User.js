@@ -39,6 +39,16 @@ const UserSchema = new Schema({
     type: Array,
     default: [],
   },
+  location: {
+    type: String,
+    default: "MilkyWay Galaxy",
+  },
+  dateOfBirth: {
+    type: Date,
+  },
+  gender: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("user", UserSchema);

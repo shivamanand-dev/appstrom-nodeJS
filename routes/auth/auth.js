@@ -39,6 +39,9 @@ router.post(
         promocode,
         appliedPromocode,
         openningBalance,
+        location,
+        dateOfBirth,
+        gender,
       } = {
         name: req.body.name,
         email: req.body.email,
@@ -47,6 +50,9 @@ router.post(
         promocode: req.body.username,
         appliedPromocode: req.body.appliedPromocode,
         openningBalance: req.body.openningBalance,
+        location: req.body.location,
+        dateOfBirth: req.body.dateOfBirth,
+        gender: req.body.gender,
       };
 
       //   Find user with same userName and email
@@ -55,7 +61,7 @@ router.post(
 
       //   If same usernaem or email is Present give 404
       sendWelcomeEmail(email, name);
-      if (user && availUsername) {
+      if (user || availUsername) {
         return res
           .status(400)
           .json({ success: success, error: "sorry, user already registered" });
@@ -99,6 +105,9 @@ router.post(
         promocode,
         appliedPromocode,
         openningBalance,
+        location,
+        dateOfBirth,
+        gender,
       });
 
       //   create jwt token

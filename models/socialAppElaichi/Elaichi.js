@@ -14,11 +14,11 @@ const ElaichiSchema = new Schema({
     type: mongoose.Schema.Types.String,
     ref: "name",
   },
-  tweet: {
+  elaichi: {
     type: String,
     required: true,
   },
-  tweetType: {
+  elaichiType: {
     type: String,
     default: "public",
   },
