@@ -5,9 +5,23 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const User = require("../../models/auth/User");
 
+// Get all Tweets
+router.get("/", async (req, res) => {
+  try {
+    const tweets = await Elaichi.find({ tweetType: "public" });
+    console.log(req.body);
+    res.json(tweets);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Server error occur" });
+  }
+});
+
+// Get Profile Tweets
 router.get("/profile", getUser, async (req, res) => {
   try {
     const tweets = await Elaichi.find({ user: req.user.id });
+    console.log(req.body);
     res.json(tweets);
   } catch (error) {
     console.error(error);
@@ -19,10 +33,11 @@ router.get("/profile", getUser, async (req, res) => {
 router.post(
   "/createpost",
   getUser,
-  [body("tweet", "Tweet must be min 5 char").isLength({ min: 5 })],
+  [body("elaichi", "Tweet must be min 5 char").isLength({ min: 5 })],
   async (req, res) => {
     try {
-      const { tweet, tweetType } = req.body;
+      console.log(req.body);
+      const { elaichi, elaichiType } = req.body;
       const error = validationResult(req);
       if (!error.isEmpty()) {
         return res.status(400).json({ error: error.array() });
@@ -30,15 +45,15 @@ router.post(
 
       const user = await User.findById(req.user.id);
 
-      const elaichi = new Elaichi({
-        tweet,
-        tweetType,
+      const createElaichi = new Elaichi({
+        elaichi,
+        elaichiType,
         user: req.user.id,
         username: user.username,
         name: user.name,
       });
 
-      const savedElaichi = await elaichi.save();
+      const savedElaichi = await createElaichi.save();
       res.json(savedElaichi);
     } catch (error) {
       console.error(error);
