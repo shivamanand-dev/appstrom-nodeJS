@@ -20,5 +20,5 @@ app.use("/api/activity", require("./routes/activityTracker/activity"));
 app.use("/api/elaichi", require("./routes/socialAppElaichi/Elaichi"));
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`App listening at http://localhost:${port}`);
 });
