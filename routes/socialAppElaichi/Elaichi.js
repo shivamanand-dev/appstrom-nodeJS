@@ -8,8 +8,14 @@ const User = require("../../models/auth/User");
 // Get all Tweets
 router.get("/", async (req, res) => {
   try {
-    const tweets = await Elaichi.find({ tweetType: "public" });
-    console.log(req.body);
+    const { page } = req.body;
+    const tweets = await Elaichi.find({ tweetType: "public" }, null, {
+      skip: 0,
+    })
+      .sort("-time")
+      .limit(Number(2));
+    console.log(page);
+    console.log(tweets.length);
     res.json(tweets);
   } catch (error) {
     console.error(error);
@@ -21,7 +27,7 @@ router.get("/", async (req, res) => {
 router.get("/profile", getUser, async (req, res) => {
   try {
     const tweets = await Elaichi.find({ user: req.user.id });
-    console.log(req.body);
+    // console.log(req.body);
     res.json(tweets);
   } catch (error) {
     console.error(error);
@@ -36,7 +42,7 @@ router.post(
   [body("elaichi", "Tweet must be min 5 char").isLength({ min: 5 })],
   async (req, res) => {
     try {
-      console.log(req.body);
+      // console.log(req.body);
       const { elaichi, elaichiType } = req.body;
       const error = validationResult(req);
       if (!error.isEmpty()) {
