@@ -6,17 +6,21 @@ const { body, validationResult } = require("express-validator");
 const User = require("../../models/auth/User");
 
 // Get all Tweets
-router.get("/", async (req, res) => {
+router.get("/:page", async (req, res) => {
   try {
-    const { page } = req.body;
-    const tweets = await Elaichi.find({ tweetType: "public" }, null, {
-      skip: 0,
+    const { page } = req.params;
+
+    let skip = page * 10;
+    const totalElaichis = await Elaichi.find({ elaichiType: "public" });
+
+    const tweets = await Elaichi.find({ elaichiType: "public" }, null, {
+      skip: skip,
     })
       .sort("-time")
-      .limit(Number(2));
-    console.log(page);
-    console.log(tweets.length);
-    res.json(tweets);
+      .limit(Number(10));
+    // console.log(totalElaichis.length);
+    // console.log(page);
+    res.json({ totalElaichis: totalElaichis.length, elaichi: tweets });
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Server error occur" });
@@ -24,11 +28,20 @@ router.get("/", async (req, res) => {
 });
 
 // Get Profile Tweets
-router.get("/profile", getUser, async (req, res) => {
+router.get("/profile/:page", getUser, async (req, res) => {
   try {
-    const tweets = await Elaichi.find({ user: req.user.id });
+    const { page } = req.params;
+
+    let skip = page * 10;
+    const totalElaichis = await Elaichi.find({ user: req.user.id });
+
+    const tweets = await Elaichi.find({ user: req.user.id }, null, {
+      skip: skip,
+    })
+      .sort("-time")
+      .limit(Number(10));
     // console.log(req.body);
-    res.json(tweets);
+    res.json({ totalElaichis: totalElaichis.length, elaichi: tweets });
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Server error occur" });
@@ -71,11 +84,11 @@ router.post(
 // Update Tweet
 router.put("/updatePost/:id", getUser, async (req, res) => {
   try {
-    const { tweetType, followers, following } = req.body;
+    const { elaichiType, followers, following } = req.body;
     const updateTweet = {};
 
-    if (tweetType) {
-      updateTweet.tweetType = tweetType;
+    if (elaichiType) {
+      updateTweet.elaichiType = elaichiType;
     }
     if (followers) {
       updateTweet.followers = followers;
