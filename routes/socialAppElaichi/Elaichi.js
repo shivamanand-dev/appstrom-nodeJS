@@ -118,6 +118,7 @@ router.put("/updatePost/:id", getUser, async (req, res) => {
   }
 });
 
+// Delete Elaichi
 router.delete("/deleteelaichi/:id", getUser, async (req, res) => {
   try {
     let elaichi = await Elaichi.findById(req.params.id);

@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../../models/auth/User");
 const { body, validationResult } = require("express-validator");
 var bcrypt = require("bcryptjs");
+const Elaichi = require("../../models/socialAppElaichi/Elaichi");
 var jwt = require("jsonwebtoken");
 const getUser = require("../../middleware/getUser");
 const { sendWelcomeEmail, sendByeEmail } = require("../../accounts/email");
@@ -202,6 +203,34 @@ router.get("/getuser", getUser, async (req, res) => {
     // const img = await sharp(user.avatar).toFormat("jpeg").toFile("../img");
 
     res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Server error occur" });
+  }
+});
+
+// Visit Profile
+router.get("/profile/:username/:page", getUser, async (req, res) => {
+  try {
+    const { username, page } = req.params;
+
+    let skip = page * 10;
+
+    const user = await User.findOne({ username: username }).select("-password");
+    const totalElaichis = await Elaichi.find({
+      username: username,
+      elaichiType: "public",
+    });
+    const elaichi = await Elaichi.find(
+      { username: username, elaichiType: "public" },
+      null,
+      {
+        skip: skip,
+      }
+    )
+      .sort("-time")
+      .limit(Number(10));
+    res.json({ user, totalElaichis: totalElaichis.length, elaichi });
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Server error occur" });
