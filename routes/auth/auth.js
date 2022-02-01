@@ -185,7 +185,7 @@ router.post(
       const authToken = jwt.sign(data, JWT_Secret);
 
       success = true;
-      res.json({ success, authToken });
+      res.json({ success, user, authToken });
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: "Server error occur" });
