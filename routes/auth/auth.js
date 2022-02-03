@@ -6,7 +6,7 @@ var bcrypt = require("bcryptjs");
 const Elaichi = require("../../models/socialAppElaichi/Elaichi");
 var jwt = require("jsonwebtoken");
 const getUser = require("../../middleware/getUser");
-const { sendWelcomeEmail, sendByeEmail } = require("../../accounts/email");
+const { sendWelcomeEmail } = require("../../accounts/email");
 
 const JWT_Secret = process.env.JWT_Secret;
 
@@ -60,8 +60,8 @@ router.post(
       let user = await User.findOne({ email: email });
       let availUsername = await User.findOne({ username: username });
 
-      //   If same usernaem or email is Present give 404
       sendWelcomeEmail(email, name);
+      //   If same usernaem or email is Present give 404
       if (user || availUsername) {
         return res
           .status(400)
