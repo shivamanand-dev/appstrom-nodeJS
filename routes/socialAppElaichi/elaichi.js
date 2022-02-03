@@ -52,7 +52,7 @@ router.get("/profile/:page", getUser, async (req, res) => {
 router.post(
   "/createpost",
   getUser,
-  [body("elaichi", "Tweet must be min 5 char").isLength({ min: 5 })],
+  [body("elaichi", "Tweet must be min 1 char").isLength({ min: 1 })],
   async (req, res) => {
     try {
       // console.log(req.body);
