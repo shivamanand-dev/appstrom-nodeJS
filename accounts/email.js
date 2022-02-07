@@ -13,12 +13,12 @@ const sendWelcomeEmail = (email, name) => {
   });
 };
 
-const contactmail = (email, name, message) => {
+const contactmail = (name, email, message) => {
   sgMail.send({
     to: "ShivamAnand@appstrom.app",
     from: "ShivamAnand@appstrom.app",
     subject: "Contact mail from user",
-    text: `message from ${name} ${email} ${""} ${message}`,
+    text: `message from: ${name} ${"\n"}Email:- ${email}${"\n"} Message:- ${message}`,
   });
 };
 
