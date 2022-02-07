@@ -81,43 +81,6 @@ router.post(
   }
 );
 
-// Update Tweet
-router.put("/updatePost/:id", getUser, async (req, res) => {
-  try {
-    const { elaichiType, followers, following } = req.body;
-    const updateTweet = {};
-
-    if (elaichiType) {
-      updateTweet.elaichiType = elaichiType;
-    }
-    if (followers) {
-      updateTweet.followers = followers;
-    }
-    if (following) {
-      updateTweet.following = following;
-    }
-
-    let elaichi = await Elaichi.findById(req.params.id);
-    if (!elaichi) {
-      return res.status(400).send({ message: "Elaichi Not Found" });
-    }
-
-    if (elaichi.user.toString() !== req.user.id) {
-      return res.status(401).send({ message: "Not Allowed" });
-    }
-
-    elaichi = await Elaichi.findByIdAndUpdate(req.params.id, {
-      $set: updateTweet,
-      new: true,
-    });
-
-    res.json(elaichi);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ message: "Server error occur" });
-  }
-});
-
 // Delete Elaichi
 router.delete("/deleteelaichi/:id", getUser, async (req, res) => {
   try {

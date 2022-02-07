@@ -26,6 +26,18 @@ const ElaichiSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  like: {
+    type: Number,
+    default: 0,
+  },
+  likedBy: {
+    type: Array,
+    default: [],
+  },
+  comment: {
+    type: Array,
+    default: [],
+  },
 });
 
 module.exports = mongoose.model("elaichi", ElaichiSchema);

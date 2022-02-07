@@ -237,4 +237,74 @@ router.get("/profile/:username/:page", getUser, async (req, res) => {
   }
 });
 
+// Update Follow
+router.put("/updateFollower/", getUser, async (req, res) => {
+  try {
+    let success = false;
+    let followStatus = "following";
+    let alertStatus = "success";
+
+    const { follower } = req.body;
+    let updateUserFollower = { followers: [] };
+    let updateUserFollowing = { following: [] };
+
+    // Checking is follower id is correct
+    let followUser = await User.findOne({ username: req.body.follower });
+    if (!followUser) {
+      return res.status(400).send({ success, message: "User not found" });
+    }
+
+    // if follower User is correct
+    let user = await User.findById(req.user.id);
+
+    // following and follower fetching and pushing in arrays
+    updateUserFollower.followers = followUser.followers;
+    updateUserFollowing.following = user.following;
+
+    // Checking still following or not
+    if (updateUserFollowing.following.includes(follower)) {
+      // console.log(updateUserFollower.followers);
+      // Checking index and removing from array
+      const indexNoFollowing = updateUserFollowing.following.findIndex((e) => {
+        return e === follower;
+      });
+      updateUserFollowing.following.splice(indexNoFollowing, 1);
+      // ----
+      const indexNoFollower = updateUserFollower.followers.findIndex((e) => {
+        return e === user.username;
+      });
+      updateUserFollower.followers.splice(indexNoFollower, 1);
+
+      // Changing status
+      followStatus = "not following";
+      alertStatus = "warning";
+      // console.log(updateUserFollower.followers);
+    } else {
+      updateUserFollowing.following.push(follower);
+      updateUserFollower.followers.push(user.username);
+    }
+
+    // Saving in DB
+    await User.findByIdAndUpdate(followUser._id.toString(), {
+      $set: updateUserFollower,
+      new: true,
+    });
+    await User.findByIdAndUpdate(req.user.id, {
+      $set: updateUserFollowing,
+      new: true,
+    });
+
+    //
+    success = true;
+    res.json({
+      success,
+      alertStatus,
+      message: `Now you are ${followStatus} ${follower}`,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Server error occur" });
+  }
+});
+
 module.exports = router;
