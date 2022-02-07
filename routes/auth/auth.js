@@ -244,7 +244,7 @@ router.put("/updateFollower/", getUser, async (req, res) => {
     let followStatus = "following";
     let alertStatus = "success";
 
-    const { follower } = req.body;
+    const { follower, name } = req.body;
     let updateUserFollower = { followers: [] };
     let updateUserFollowing = { following: [] };
 
@@ -262,16 +262,19 @@ router.put("/updateFollower/", getUser, async (req, res) => {
     updateUserFollowing.following = user.following;
 
     // Checking still following or not
-    if (updateUserFollowing.following.includes(follower)) {
-      // console.log(updateUserFollower.followers);
+    if (
+      updateUserFollowing.following.some((e) => {
+        return e.follower === follower;
+      })
+    ) {
       // Checking index and removing from array
       const indexNoFollowing = updateUserFollowing.following.findIndex((e) => {
-        return e === follower;
+        return e.follower === follower;
       });
       updateUserFollowing.following.splice(indexNoFollowing, 1);
       // ----
       const indexNoFollower = updateUserFollower.followers.findIndex((e) => {
-        return e === user.username;
+        return e.following === user.username;
       });
       updateUserFollower.followers.splice(indexNoFollower, 1);
 
@@ -280,8 +283,11 @@ router.put("/updateFollower/", getUser, async (req, res) => {
       alertStatus = "warning";
       // console.log(updateUserFollower.followers);
     } else {
-      updateUserFollowing.following.push(follower);
-      updateUserFollower.followers.push(user.username);
+      updateUserFollowing.following.push({ follower: follower, name: name });
+      updateUserFollower.followers.push({
+        following: user.username,
+        name: user.name,
+      });
     }
 
     // Saving in DB
