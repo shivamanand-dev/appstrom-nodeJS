@@ -103,4 +103,136 @@ router.delete("/deleteelaichi/:id", getUser, async (req, res) => {
   }
 });
 
+// Update Tweet Likes
+router.put("/updatelikes/:id", getUser, async (req, res) => {
+  try {
+    let success = false;
+    let likeStatus = "liked";
+    let alertStatus = "success";
+
+    // const { username, name } = req.body;
+    let updateTweetLike = { likedBy: [] };
+
+    // Checking is like tweet is present
+    let likeElaichi = await Elaichi.findById(req.params.id);
+    if (!likeElaichi) {
+      return res
+        .status(400)
+        .send({ success, message: "Not found please try refreshing page" });
+    }
+
+    // if liked elaichi is present
+    let user = await User.findById(req.user.id);
+    // like elaichi pushing in arrays
+    updateTweetLike.likedBy = likeElaichi.likedBy;
+
+    // Checking still liking or not
+    if (
+      updateTweetLike.likedBy.some((e) => {
+        return e.username === user.username;
+      })
+    ) {
+      // Checking index and removing from array
+      const indexNoLike = updateTweetLike.likedBy.findIndex((e) => {
+        return e.username === user.username;
+      });
+      updateTweetLike.likedBy.splice(indexNoLike, 1);
+
+      // Changing status
+      likeStatus = "removed like";
+      alertStatus = "warning";
+
+      // If not like then push user to liked by
+    } else {
+      updateTweetLike.likedBy.push({
+        username: user.username,
+        name: user.name,
+      });
+    }
+
+    // Saving in DB
+    await Elaichi.findByIdAndUpdate(req.params.id, {
+      $set: updateTweetLike,
+      new: true,
+    });
+
+    //
+    success = true;
+    res.json({
+      success,
+      alertStatus,
+      message: `You ${likeStatus} successfully`,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Server error occur" });
+  }
+});
+
+// Update Tweet disLikes
+router.put("/updatedislikes/:id", getUser, async (req, res) => {
+  try {
+    let success = false;
+    let likeStatus = "disliked";
+    let alertStatus = "success";
+
+    // const { username, name } = req.body;
+    let updateTweetLike = { likedBy: [] };
+
+    // Checking is like tweet is present
+    let likeElaichi = await Elaichi.findById(req.params.id);
+    if (!likeElaichi) {
+      return res
+        .status(400)
+        .send({ success, message: "Not found please try refreshing page" });
+    }
+
+    // if liked elaichi is present
+    let user = await User.findById(req.user.id);
+    // like elaichi pushing in arrays
+    updateTweetLike.likedBy = likeElaichi.likedBy;
+
+    // Checking still liking or not
+    if (
+      updateTweetLike.likedBy.some((e) => {
+        return e.username === user.username;
+      })
+    ) {
+      // Checking index and removing from array
+      const indexNoLike = updateTweetLike.likedBy.findIndex((e) => {
+        return e.username === user.username;
+      });
+      updateTweetLike.likedBy.splice(indexNoLike, 1);
+
+      // Changing status
+      likeStatus = "removed like";
+      alertStatus = "warning";
+
+      // If not like then push user to liked by
+    } else {
+      updateTweetLike.likedBy.push({
+        username: user.username,
+        name: user.name,
+      });
+    }
+
+    // Saving in DB
+    await Elaichi.findByIdAndUpdate(req.params.id, {
+      $set: updateTweetLike,
+      new: true,
+    });
+
+    //
+    success = true;
+    res.json({
+      success,
+      alertStatus,
+      message: `You ${likeStatus} successfully`,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Server error occur" });
+  }
+});
+
 module.exports = router;
